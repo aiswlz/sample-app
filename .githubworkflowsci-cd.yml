@@ -1,0 +1,53 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 🧾 Клонировать репозиторий
+      uses: actions/checkout@v3
+
+    - name: 🐍 Установить Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: 📦 Установить зависимости backend
+      run: |
+        cd backend
+        pip install -r requirements.txt
+
+    - name: ✅ Запустить тесты backend
+      run: |
+        cd backend
+        pytest
+
+    - name: 🧰 Установить Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: 📦 Установить зависимости frontend и собрать
+      run: |
+        cd frontend
+        npm install
+        npm run build
+
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 🧾 Клонировать репозиторий
+      uses: actions/checkout@v3
+
+    - name: 🐳 Установить Docker Compose и развернуть
+      run: |
+        docker-compose up -d --build
