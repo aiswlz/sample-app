@@ -21,12 +21,12 @@ jobs:
 
     - name: 📦 Установить зависимости backend
       run: |
-        cd backend
+        cd sample-app/backend
         pip install -r requirements.txt
 
     - name: ✅ Запустить тесты backend
       run: |
-        cd backend
+        cd sample-app/backend
         pytest
 
     - name: 🧰 Установить Node.js
@@ -36,7 +36,7 @@ jobs:
 
     - name: 📦 Установить зависимости frontend и собрать
       run: |
-        cd frontend
+        cd sample-app/frontend
         npm install
         npm run build
 
